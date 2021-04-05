@@ -1,0 +1,3 @@
+name: itgix-pulumi
+runtime: go
+description: AWS pulumi test with Go
