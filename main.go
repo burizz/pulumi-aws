@@ -63,6 +63,12 @@ func main() {
 					ToPort:     pulumi.Int(80),
 					CidrBlocks: pulumi.StringArray{pulumi.String("0.0.0.0/0")},
 				},
+				ec2.SecurityGroupIngressArgs{
+					Protocol:   pulumi.String("tcp"),
+					FromPort:   pulumi.Int(22),
+					ToPort:     pulumi.Int(22),
+					CidrBlocks: pulumi.StringArray{pulumi.String("46.10.215.162/32")},
+				},
 			},
 			VpcId: itgixVpc.ID(),
 		})
@@ -78,10 +84,7 @@ func main() {
 			VpcSecurityGroupIds:      pulumi.StringArray{itgixSecurityGroup.ID()}, //take sg ID from output
 			AssociatePublicIpAddress: pulumi.Bool(true),
 			SubnetId:                 itgixSubnet.ID(),
-			UserData: pulumi.String(`#!/bin/bash
-												echo "ITgix Pulumi!" > index.html
-												nohup python -m SimpleHTTPServer 80 &`),
-			Tags: pulumi.StringMap{"Name": pulumi.String("pulumi-itgix-test")},
+			Tags:                     pulumi.StringMap{"Name": pulumi.String("pulumi-itgix-test")},
 		})
 
 		if createEc2InstanceErr != nil {
